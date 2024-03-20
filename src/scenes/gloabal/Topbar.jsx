@@ -10,10 +10,13 @@ import  NotificationOutlinedIcon  from "@mui/icons-material/NotificationsOutline
 import  SettingsOutlinedIcon  from "@mui/icons-material/SettingsOutlined";
 import  PersonOutlinedIcon  from "@mui/icons-material/PersonOutlineOutlined";
 import SearchIcon from '@mui/icons-material/Search';
+
+import { useMediaQuery } from "@mui/material";
 const Topbar = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const colorMode = useContext(ColorModeContext);
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (<Box display = "flex" justifyContent="space-between" p={2}>
         {/*SEARCH BAR */}
@@ -38,16 +41,17 @@ const Topbar = () => {
 
                 )}
                 
-
             </IconButton>
-            <IconButton>
-                <NotificationOutlinedIcon/>
-                
-            </IconButton>
-            <IconButton>
-                <SettingsOutlinedIcon/>
-                
-            </IconButton>
+            {!isSmallScreen && ( // Render only if not on a small screen
+                <>
+                <IconButton>
+                    <NotificationOutlinedIcon />
+                </IconButton>
+                <IconButton>
+                    <SettingsOutlinedIcon />
+                </IconButton>
+                </>
+            )}
             <IconButton>
                 <PersonOutlinedIcon/>
                 
