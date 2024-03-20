@@ -1,5 +1,7 @@
 import React from "react";
 import { Box, Typography, useTheme } from "@mui/material";
+import  { useState, useEffect } from 'react';
+
 import  { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { mockDataTeam } from "../../data/mockData";
@@ -7,17 +9,33 @@ import  AdminPanelSettingsOutlinedIcon  from "@mui/icons-material/AdminPanelSett
 import  LockOpenOutlinedIcon  from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Team =()=> {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const matches = useMediaQuery(theme.breakpoints.down("sm"));
 
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 600);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth < 600);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+   
     const columns = [
-    {field: "id", headerName: "ID"},
+    {field: "id", headerName: "ID",  flex: isSmallScreen ? 0.5 : 1},
     {
         field: "name",
         headerName: "NAME",
-        flex:1,
+        flex: 1,
         cellClassName: "name-column--cell"
     },
     {
@@ -26,11 +44,15 @@ const Team =()=> {
         type: "number",
         headerAlign: "left",
         align: "left",
+        flex: 1,
+    
+        
     },
     {
         field: "email",
         headerName: "Email",
-        flex: 1
+        flex: 1,
+        
     },
     {
         field: "accessLevel",
@@ -56,9 +78,11 @@ const Team =()=> {
                     {access ==="admin" && <AdminPanelSettingsOutlinedIcon/>}
                     {access ==="manager" && <SecurityOutlinedIcon/>}
                     {access ==="user" && <LockOpenOutlinedIcon/>}
+                    {!isSmallScreen && (
                     <Typography color={colors.grey[100]} sx={{ml: "5px"}}>
                         {access}
                     </Typography>
+            )}
 
                 </Box>
             );
@@ -67,12 +91,21 @@ const Team =()=> {
     },
     
     ];
+
+    const columnVisibilityModel = {
+    age: !matches && !isSmallScreen,
+    email: !matches && !isSmallScreen,
+    };
+
+
+
     return (
-        <Box m="20px" mt="10px">
+        <Box m={{xs:"10px", md:"20px"}}>
             <Header title="TEAM" subtitle="Managing the Team Members"/>
             <Box
-            m="0px 0 0 0"
-            height="75vh"
+            m={{ xs: "0px", md: "40px" }}
+            mt={{ xs: "0px", md: "40px" }}
+            height={{xs:"90vh", md:"75vh"}}
             sx={{
                 "& .MuiDataGrid-root": {
                     border: "none",
@@ -97,9 +130,10 @@ const Team =()=> {
                 "& .MuiCheckbox-root": {
                     color: `${colors.greenAccent[200]} !important`,
                 },
+                
             }}
             >
-                <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} />
+                <DataGrid checkboxSelection rows={mockDataTeam} columns={columns} columnVisibilityModel={columnVisibilityModel}/>
 
             </Box>
         </Box>

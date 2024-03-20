@@ -3,11 +3,17 @@ import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import { ResponsivePie } from "@nivo/pie";
 import { mockPieData as data } from "../data/mockData";
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 
 const PieChart =() => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+    const legendItemWidth = isSmallScreen ? 50 : 100; // Adjust width for small screens
+
 
     return(
         <ResponsivePie
@@ -100,7 +106,7 @@ const PieChart =() => {
                 translateX: 0,
                 translateY: 56,
                 itemsSpacing: 0,
-                itemWidth: 100,
+                itemWidth: legendItemWidth,
                 itemHeight: 18,
                 itemTextColor: '#999',
                 itemDirection: 'left-to-right',

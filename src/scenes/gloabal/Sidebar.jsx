@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import {Box, IconButton, Typography, useTheme} from '@mui/material';
@@ -17,6 +17,7 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 
 const Item = ({title, to, icon, selected, setSelected}) => {
@@ -44,16 +45,28 @@ const Sidebar = () => {
     const colors = tokens(theme.palette.mode);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [selected, setSelected] = useState("Dashboard");
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    useEffect(() => {
+        setIsCollapsed(isMobile);
+      }, [isMobile]);
+
+
+    
     return (
         <Box sx={{
             "& .pro-sidebar-inner": {
                 background: `${colors.primary[400]} !important`,
+                width: isCollapsed ? (isMobile ? '50px' : '80px') : 'auto',
+                
               },
             "& .pro-icon-wrapper": {
-                backgroundColor: "transparent !important"
+                backgroundColor: "transparent !important",
+                
             },
             "& .pro-inner-item": {
-                padding: "5px 35px 5px 20px !important"
+                
+                padding: isCollapsed ? (isMobile ?  "5px 35px 5px 10px !important" :"5px 35px 5px 20px !important" ): 'auto',
+                marginRight: isMobile && isMobile ? '10px' : '0', // Adjusted margin for collapsed sidebar on small screens
             },
             "& .pro-inner-item:hover": {
                 color: "#868dfb !important"
@@ -61,7 +74,15 @@ const Sidebar = () => {
             "& .pro-menu-item.active" : {
                 color: "#6870fa !important"
             },
-        }}>
+            
+            position: isMobile ? 'fixed' : 'relative', // Add this line
+            zIndex: isMobile ? 1000 : 'auto', // Add this line
+            height: isMobile ? '100%' : 'auto',
+            
+            
+}}>
+            
+    
             <ProSidebar collapsed={isCollapsed}>
                 <Menu iconShape="square">
                     {/* LOGO AND MENU ICON */}
@@ -134,7 +155,7 @@ const Sidebar = () => {
                         <Typography
                             variant="h6"
                             color={colors.grey[300]}
-                            sx={{ m: "5px 0 5px 20px" }}
+                            sx={{ m: isCollapsed && isMobile ? "5px 0 5px 10px" : "5px 0 5px 20px" }}
                         >
                             Data
                         </Typography>
@@ -162,7 +183,7 @@ const Sidebar = () => {
                         <Typography
                             variant="h6"
                             color={colors.grey[300]}
-                            sx={{ m: "5px 0 5px 20px" }}
+                            sx={{ m: isCollapsed && isMobile ? "5px 0 5px 10px" : "5px 0 5px 20px" }}
                             >
                             Pages
                         </Typography>
@@ -190,7 +211,7 @@ const Sidebar = () => {
                         <Typography
                             variant="h6"
                             color={colors.grey[300]}
-                            sx={{ m: "5px 0 5px 20px" }}
+                            sx={{ m: isCollapsed && isMobile ? "5px 0 5px 10px" : "5px 0 5px 20px" }}
                         >
                             Charts
                         </Typography>

@@ -5,19 +5,37 @@ import { tokens } from "../../theme";
 import { mockDataContacts } from "../../data/mockData";
 import Header from "../../components/Header";
 import { useTheme } from "@mui/material";
+import  { useState, useEffect } from 'react';
+import useMediaQuery from "@mui/material/useMediaQuery";
+
 
 const Contacts =()=> {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const matches = useMediaQuery(theme.breakpoints.down("sm"));
+
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 600);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth < 600);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const columns = [
     {field: "id", headerName: "ID", flex: 0.5},
-    {field: "registrarId", headerName: "Registrar ID"},
+    {field: "registrarId", headerName: "Registrar ID", flex:  1},
 
     {
         field: "name",
         headerName: "NAME",
-        flex:1,
+        flex:  1,
         cellClassName: "name-column--cell"
     },
     {
@@ -50,15 +68,25 @@ const Contacts =()=> {
     {
         field: "zipCode",
         headerName: "Zip Code",
-        flex: 1
+        flex: isSmallScreen ? 0.5 : 1
     },
 ];
+const columnVisibilityModel = {
+    registrarId: !matches && !isSmallScreen,
+    age: !matches && !isSmallScreen,
+    address: !matches && !isSmallScreen,
+    city: !matches && !isSmallScreen,
+    email: !matches && !isSmallScreen,
+    zipCode: !matches && !isSmallScreen,
+    };
+
     return (
-        <Box m="20px">
+        <Box m={{xs:"10px", md:"20px"}}>
             <Header title="CONTACTS" subtitle="List of contatcs for future reference"/>
             <Box
-            m="40px 0 0 0"
-            height="75vh"
+            m={{ xs: "0px", md: "40px" }}
+            mt={{ xs: "0px", md: "40px" }}
+            height={{xs:"90vh", md:"75vh"}}
             sx={{
                 "& .MuiDataGrid-root": {
                     border: "none",
@@ -86,7 +114,7 @@ const Contacts =()=> {
             }}
             >
                 <DataGrid rows={mockDataContacts} columns={columns}  slots={{
-    toolbar: GridToolbar,}} />
+    toolbar: GridToolbar,}} columnVisibilityModel={columnVisibilityModel}  />
 
             </Box>
         </Box>

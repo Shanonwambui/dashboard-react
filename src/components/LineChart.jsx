@@ -3,10 +3,23 @@ import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import { ResponsiveLine } from "@nivo/line";
 import { mockLineData as data } from "../data/mockData";
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 const LineChart =(isDashboard=false)=>{
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+
+     // Adjust legend and margin based on screen size
+     const legendWidth = window.innerWidth < 600 ? 50 : 80;
+     const margin = {
+         top: 50,
+         right: window.innerWidth < 600 ? 80 : 110,
+         bottom: 80,
+         left: window.innerWidth < 600 ? 40 : 60,
+     };
 
 
     return(
@@ -47,7 +60,7 @@ const LineChart =(isDashboard=false)=>{
         
         }}
         colors={isDashboard ? {datum: "color"} : {scheme: 'nivo'}}
-        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+        margin={margin}
         xScale={{ type: 'point' }}
         yScale={{
             type: 'linear',
@@ -60,9 +73,8 @@ const LineChart =(isDashboard=false)=>{
         curve="catmullRom"
         axisTop={null}
         axisRight={null}
-        axisBottom={{
+        axisBottom={ isSmallScreen ? null : {
             tickSize: 5,
-          
             tickPadding: 5,
             tickRotation: 0,
             legend: isDashboard ? undefined : 'transportation',
@@ -82,6 +94,7 @@ const LineChart =(isDashboard=false)=>{
         }}
         enableGridX={false}
         enableGridY={false}
+        enablePoints= {isSmallScreen ? false : true} 
         pointSize={10}
         pointColor={{ theme: 'background' }}
         pointBorderWidth={2}
@@ -94,11 +107,11 @@ const LineChart =(isDashboard=false)=>{
                 anchor: 'bottom-right',
                 direction: 'column',
                 justify: false,
-                translateX: 100,
+                translateX: isSmallScreen ? 70: 100, 
                 translateY: 0,
                 itemsSpacing: 0,
                 itemDirection: 'left-to-right',
-                itemWidth: 80,
+                itemWidth: legendWidth,
                 itemHeight: 20,
                 itemOpacity: 0.75,
                 symbolSize: 12,

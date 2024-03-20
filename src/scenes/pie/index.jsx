@@ -5,9 +5,9 @@ import PieChart from "../../components/PieChart";
 
 const Pie =()=> {
     return(
-    <Box m="20px" mt="40px">
+    <Box m={{ xs: "10px", md: "20px" }} mt="40px">
         <Header title="Pie Chart" subtitle="Simple Pie Chart"/>
-        <Box height="75vh" mt="40px">
+        <Box height="75vh" mt="40px" ml={{xs: "0px", md: "20px"}}>
             <PieChart/>
 
         </Box>

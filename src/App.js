@@ -16,12 +16,19 @@ import Pie from "./scenes/pie";
 import FAQ from "./scenes/faq";
 import Geography from "./scenes/geography";
 import Calender from "./scenes/calender";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+
 
 
 
 function App() {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+  const muiTheme = useTheme();
+  const isSmallScreen = useMediaQuery(muiTheme.breakpoints.down('sm'));
+
+  
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -29,7 +36,7 @@ function App() {
         <CssBaseline/>
         <div className="app">
           <Sidebar isSidebar={isSidebar}/>
-          <main className="content">
+          <main className="content" style={{ marginLeft: isSmallScreen && isSidebar ? '50px' : '0' }}>
             <Topbar setIsSidebar={setIsSidebar}/>
             <Routes>
               <Route path="/" element={ <Dashboard/>}/>

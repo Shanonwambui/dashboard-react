@@ -8,11 +8,14 @@ import listPlugin from "@fullcalendar/list";
 import {Box, List, ListItem, ListItemText, Typography, useTheme} from "@mui/material";
 import Header from "../../components/Header";
 import { tokens } from "../../theme";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Calender = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [currentEvents, setCurrentEvents] = useState([]);
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const calendarHeight = isSmallScreen ? '50vh' : '75vh';
 
     const formatDate = (date) => {
         return new Intl.DateTimeFormat("en-US", {
@@ -50,13 +53,14 @@ const Calender = () => {
     return (
         <Box m="20px">
             <Header title="CALENDAR" subtitle="Full Calendar Interactive Page" />
-            <Box display="flex" justifyContent="space-between">
+            <Box display="flex" justifyContent="space-between" flexDirection={isSmallScreen ? 'column' : 'row'}>
                 {/*CALENDAR SIDEBAR */}
                 <Box 
-                flex="1 1 20%"
+                flex={isSmallScreen ? 'none' : '1 1 20%'}
                 backgroundColor = {colors.primary[400]}
                 p="15px"
                 borderRadius="4px"
+                width="100%"
                 >
                     <Typography variant="h5">Events</Typography>
                     <List>
@@ -80,9 +84,10 @@ const Calender = () => {
 
                 </Box>
                 {/*CALENDAR*/}
-                <Box flex="1 1 100%" ml="15px">
+                <Box flex="1 1 100%" ml={isSmallScreen ? '5px' : '15px'}>
                     <FullCalendar
-                    height="75vh"
+                    height={calendarHeight}
+                    width={isSmallScreen ? '80%' : '100%'} // Adjusted width based on isSmallScreen
                     plugins={[
                         dayGridPlugin,
                         timeGridPlugin,
@@ -90,11 +95,10 @@ const Calender = () => {
                         listPlugin
                     ]}
                     headerToolbar={{
-                        left: "prev,next today",
+                        left: isSmallScreen ? '' : "prev,next today", // Hide navigation buttons on small screens
                         center: "title",
-                        right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth",
-
-                    }}
+                        right: isSmallScreen ? '' : "dayGridMonth,timeGridWeek,timeGridDay,listMonth", // Hide view buttons on small screens
+                      }}
                     initialView="dayGridMonth"
                     editable ={true}
                     selectable={true}
